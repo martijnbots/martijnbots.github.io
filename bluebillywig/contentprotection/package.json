@@ -1,0 +1,18 @@
+{
+  "name": "bb-content-protection-jwt-demo",
+  "version": "1.0.0",
+  "description": "Blue Billywig Content Protection with JWT demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martijnbots/martijnbots.github.io.git"
+  },
+  "author": "m.bots@bluebillywig.com",
+  "license": "ISC",
+  "dependencies": {
+    "webcrypto-jwt": "^0.2.2"
+  }
+}

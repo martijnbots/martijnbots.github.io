@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+        <style>
+            .row {
+                padding-bottom: 20px;
+            }
+            textarea {
+                width: 100%;
+                height: 150px;
+            }
+        </style>
+        <script src="node_modules/webcrypto-jwt/index.js"></script>
+        <script>
+            function generateJwt() {
+                const decodedToken = {
+                    "sub": "1234567890",
+                    "name": "John Doe",
+                    "iat": Math.floor(new Date().getTime() / 1000),
+                    "exp": Math.floor(new Date().getTime() / 1000) + 900 // 15 mins
+                };
+                signJWT(decodedToken, '70a2a35354f1287604da7d5494885d4b', 'HS256', function (err, token) {
+                    if (err) {
+                        clearJwt();
+                        throw err;
+                    } else {
+                        document.getElementById("decoded-jwt").value = JSON.stringify(decodedToken, null, 2);
+                        document.getElementById("encoded-jwt").value = token;
+                    }
+                });
+            }
+            function clearJwt() {
+                document.getElementById("decoded-jwt").value = "";
+                document.getElementById("encoded-jwt").value = "";
+            }
+            function showVideo() {
+                encodedJwtField = document.getElementById("encoded-jwt");
+                const videoParams = new URLSearchParams();
+                if (encodedJwtField.value) {
+                    videoParams.append("jwt", encodedJwtField.value);
+                }
+                let videoParamsStr = "";
+                if (videoParams.size > 0) {
+                    videoParamsStr = "?" + videoParams.toString();
+                }
+                window.open(new URL("video.html", window.location.href).toString() + videoParamsStr, '_blank').focus();
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container overflow-hidden">
+            <div class="row">
+                <div class="col">
+                    <h1>Blue Billywig</h1>
+                    <h2>Content Protection with JWT demo</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>This is a showcase of using a JSON Web Token (JWT) for protecting content uploaded to the Blue Billywig Online Video Platform (OVP).</p>
+                </div>
+            </div>
+            <div class="row gy-3">
+                <div class="col-12">
+                    <p>Press the button below to generate a JWT.</p>
+                    <button type="button" class="btn btn-primary" onclick="generateJwt()">Generate JWT</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearJwt()">Clear JWT</button>
+                </div>
+                <div class="col-12">
+                    <p>Click the button below to open a demo video with the generated JWT or a message if no JWT was provided.</p>
+                    <button type="button" class="btn btn-primary" onclick="showVideo()">Show video</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col gy-3">
+                    <div class="alert alert-primary" role="alert">
+                        Note that the JWT is generated using a shared secret created in the OVP. For more information on how to create a shared secret for content protection, please refer to <a class="alert-link" href="https://support.bluebillywig.com/content-management/content-protection-policies/#5-0-advanced-using-token-secrets" target="_blank">the documentation</a>.
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p><b>The decoded JWT</b></p>
+                    <textarea id="decoded-jwt" onfocus="this.select()" readonly></textarea>
+                    <p><b>The encoded JWT</b></p>
+                    <textarea id="encoded-jwt" onfocus="this.select()" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
